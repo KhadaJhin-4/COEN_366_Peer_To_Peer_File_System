@@ -16,6 +16,7 @@ class Register:
         UDP socket#:\t{self.udp_socket} 
         """
 
+
 class Registered:
 
     def __init__(self, rq, **_):
@@ -27,6 +28,7 @@ class Registered:
         {self.TYPE}
         RQ#:\t{self.rq} 
         """
+
 
 class RegisterDenied:
 
@@ -41,6 +43,7 @@ class RegisterDenied:
         RQ#:\t{self.rq}
         Reason:\t{self.reason}
         """
+
 
 class DeRegister:
 

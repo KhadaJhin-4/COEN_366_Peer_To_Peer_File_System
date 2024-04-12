@@ -16,6 +16,7 @@ class UpdateContact:
         UDP socket#:\t{self.udp_socket} 
         """
 
+
 class UpdateConfirmed:
 
     def __init__(self, rq, name, ip_address, udp_socket, **_):
@@ -33,6 +34,7 @@ class UpdateConfirmed:
         IP Address:\t{self.ip_address}
         UDP socket#:\t{self.udp_socket} 
         """
+
 
 class UpdateDenied:
 

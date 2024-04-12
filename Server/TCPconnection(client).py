@@ -1,8 +1,9 @@
 import socket
 
+
 def tcp_client():
-    host = 'localhost'   # The server's hostname or IP address
-    port = 12345         # The port used by the server
+    host = 'localhost'  # The server's hostname or IP address
+    port = 12345  # The port used by the server
 
     # Create a socket object
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,5 +22,6 @@ def tcp_client():
 
     # Close the connection
     client_socket.close()
+
 
 tcp_client()

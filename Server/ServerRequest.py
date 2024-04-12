@@ -1,10 +1,12 @@
+from logging import log
 from threading import Thread
-#from ClientDatabase import Database
+# from ClientDatabase import Database
 from ClientData import ClientData
 from Utils.register import Register, Registered, RegisterDenied, DeRegister
-#from Utils.UtilityFunctions import *
+# from Utils.UtilityFunctions import *
 from Utils.publishremove import Publish, Published, PublishDenied, Remove, Removed, RemoveDenied
 from Utils.update import UpdateContact, UpdateConfirmed, UpdateDenied
+
 
 class ServerRequestHandler(Thread):
 
@@ -119,8 +121,8 @@ class ServerRequestHandler(Thread):
             log(removed)
 
     def retrieve_all(self):
-        retireve_all = RetrieveAll(**self.data)
-        log(retireve_all)
+        retrieve_all = RetrieveAll(**self.data)
+        log(retrieve_all)
         registered_client = True
 
         if registered_client:
@@ -129,12 +131,12 @@ class ServerRequestHandler(Thread):
                 client_json_list.append(json.dumps(c.__dict__))
 
             retrieve_all = Retrieve(
-                retireve_all.rq, client_json_list)
+                retrieve_all.rq, client_json_list)
             self.send_message_to_client(retrieve_all)
             log(retrieve_all)
         else:
             retrieve_error = RetrieveError(
-                retireve_all.rq, "Something went wrong")
+                retrieve_all.rq, "Something went wrong")
             self.send_message_to_client(retrieve_error)
             log(retrieve_error)
 
@@ -147,7 +149,8 @@ class ServerRequestHandler(Thread):
                 specific_client = client
 
         if specific_client is not None:
-            retrieve_info_response = RetrieveInfoResponse(retrieve_info_request.rq, specific_client.name, specific_client.ip_address, specific_client.tcp_socket,
+            retrieve_info_response = RetrieveInfoResponse(retrieve_info_request.rq, specific_client.name,
+                                                          specific_client.ip_address, specific_client.tcp_socket,
                                                           specific_client.list_of_available_files)
             self.send_message_to_client(retrieve_info_response)
             log(retrieve_info_response)

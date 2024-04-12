@@ -18,4 +18,5 @@ def udp_client():
     # Close the socket
     client_socket.close()
 
+
 udp_client()

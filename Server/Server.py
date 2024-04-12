@@ -60,10 +60,8 @@ class Server(threading.Thread):
             try:
                 client_info = json.loads(message)
 
-
-
-            handler = self.command_handlers.get(  # parts[0] is meant to be the command from the request message
-                parts[0])  # This is called to check if the command sent is correct and exists in the system
+                handler = self.command_handlers.get(  # parts[0] is meant to be the command from the request message
+                    parts[0])  # This is called to check if the command sent is correct and exists in the system
             if handler:
                 handler(client_address)
             else:

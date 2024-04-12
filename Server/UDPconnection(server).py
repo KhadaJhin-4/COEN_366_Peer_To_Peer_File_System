@@ -1,8 +1,9 @@
 import socket
 
+
 def udp_server():
-    host = 'localhost'   # Host address
-    port = 12345         # Port number
+    host = 'localhost'  # Host address
+    port = 12345  # Port number
 
     # Create a socket object
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -18,5 +19,6 @@ def udp_server():
 
         # Send data back as an echo
         server_socket.sendto(data, addr)
+
 
 udp_server()

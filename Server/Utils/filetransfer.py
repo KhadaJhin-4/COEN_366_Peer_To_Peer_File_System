@@ -12,6 +12,7 @@ class FileReq:
         File-name:\t{self.file_name}
         """
 
+
 class FileConf:
 
     def __init__(self, rq, tcp_socket, **_):
@@ -25,6 +26,7 @@ class FileConf:
         RQ#:\t{self.rq}
         TCP socket#:\t{self.tcp_socket}
         """
+
 
 class File:
 
@@ -44,6 +46,7 @@ class File:
         Text:\t{self.text}
         """
 
+
 class FileEnd:
 
     def __init__(self, rq, file_name, chunk, text, **_):
@@ -61,6 +64,7 @@ class FileEnd:
         Chunk#:\t{self.chunk}
         Text:\t{self.text}
         """
+
 
 class FileError:
 

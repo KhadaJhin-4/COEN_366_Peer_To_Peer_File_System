@@ -14,6 +14,7 @@ class Publish:
         List of files:\t{self.list_of_files}
         """
 
+
 class Published:
 
     def __init__(self, rq, **_):
@@ -25,6 +26,7 @@ class Published:
         {self.TYPE}
         RQ#:\t{self.rq}
         """
+
 
 class PublishDenied:
 
@@ -39,6 +41,7 @@ class PublishDenied:
         RQ#:\t{self.rq}
         Reason:\t{self.reason}
         """
+
 
 class Remove:
 
@@ -56,6 +59,7 @@ class Remove:
         List of files to remove:\t{self.list_of_files_to_remove}
         """
 
+
 class Removed:
 
     def __init__(self, rq, **_):
@@ -67,6 +71,7 @@ class Removed:
         {self.TYPE}
         RQ#:\t{self.rq}
         """
+
 
 class RemoveDenied:
 
