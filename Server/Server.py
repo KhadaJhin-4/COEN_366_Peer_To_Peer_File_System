@@ -1,11 +1,9 @@
 import socket
 import threading
 import time
-import json
 
 host = 'localhost'
 port = 3000
-
 
 class Server(threading.Thread):
     def __init__(self):

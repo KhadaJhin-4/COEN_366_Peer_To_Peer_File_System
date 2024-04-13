@@ -1,5 +1,6 @@
 import socket
 
+
 def udp_client():
     host = 'localhost'   # The server's hostname or IP address
     port = 12345         # The port used by the server
