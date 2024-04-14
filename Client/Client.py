@@ -1,4 +1,3 @@
-import queue
 import socket
 import threading
 import time
@@ -12,7 +11,6 @@ class Client:
         self.udp_socket = self.set_udp(0)
         self.tcp_socket = self.set_tcp(0)
         self.registration_event = threading.Event()  # used to signal the end of an event in a thread to the main
-        self.user_input_queue = queue.Queue()
         self.command_handlers = {  # commands are saved and linked with a dictionary for a clean call in the thread,
             "REGISTER":self.Register,
             "DE-REGISTER": self.Deregister,
@@ -94,10 +92,15 @@ class Client:
         self.Register(server_address)
 
     def Deregister(self, server_address):
-        command = f"DE-REGISTER {self.name}"
-        self.udp_socket.sendto(command.encode(), server_address)
-        print(f"DE-REGISTER {self.name}")
+        try:
+            command = f"DE-REGISTER {self.name}"
+            self.udp_socket.sendto(command.encode(), server_address) #send deregistration request
 
+            #  waiting to receive a response from the server
+            message, server = self.udp_socket.recvfrom(1024)
+            print(f"{message.decode()}:{server}")
+        except socket.timeout:
+            print("Server not responding. Timeout occurred.")
 
 def main():
     # information registration, we just need the name by the user, the rest is defined inside the function
@@ -110,6 +113,7 @@ def main():
         command = input("Awaiting further requests: ")
         if command in client.command_handlers.keys():  # This is a way to make sure that the user has a valid input
             client.handle_command_server(command, server_address)
+            client.registration_event.wait()
         else:
             print("Command doesnt exist, try a valid one")
 

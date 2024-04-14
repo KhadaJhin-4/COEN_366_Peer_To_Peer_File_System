@@ -5,6 +5,14 @@ import time
 port = 3000
 
 
+# This class captures the essential elements of a client so that we can facilitate communication with other clients
+class Client:
+    def __init__(self, name, ip, udp):
+        self.name = name
+        self.ip = ip
+        self.udp = udp
+        #TODO: will probably need space for the files too
+
 class Server:
     def __init__(self):
         super().__init__()
@@ -39,21 +47,30 @@ class Server:
             client_name = parse_message[1]  # we skip [0] because that's the command we already parsed
             ip_address = parse_message[2]
             udp_socket = parse_message[3]
+            client = Client(client_name, ip_address, udp_socket)
             if client_name not in self.list_registered:
-                self.list_registered.append(client_name)
+                self.list_registered.append(client)
                 response = f"REGISTERED FIXED RQ FOR NOW"
                 self.server_socket.sendto(response.encode(), client_address)
             else:
                 response = f"REGISTER-DENIED RQ Name already exists in file"
                 self.server_socket.sendto(response.encode(), client_address)
 
-    def deregister_function(self, client):
+    def deregister_function(self, client_address, parse_message):
         with self.lock:
-            if client.name in self.list_registered:
-                self.list_registered.remove(client)
-                response = "DE-REGISTERED: "
-                self.server_socket.sendto(response.encode(), client.ip_addr)
+            # FORMAT USED: command = f"DE-REGISTER {self.name}"
+            client_name = parse_message[1]  # TODO:the info passed is the command and the name for now
 
+            # Check if any object in list_registered has the given client name
+            matching_client = [client for client in self.list_registered if client.name == client_name]
+
+            # here we are simply checking if the name given exists in the list of objects of a client
+            if matching_client:
+                client = matching_client[0]  # we pass the client into a variable for clarity
+                self.list_registered.remove(client)
+                response = f"DE-REGISTERED: {client_name}"
+                self.server_socket.sendto(response.encode(), client_address)
+            # no else condition is defined since the server doesn't care about a client not existing
     def update_function(self):
         print("Hi")
 
