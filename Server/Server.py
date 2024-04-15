@@ -11,7 +11,8 @@ class Client:
         self.name = name
         self.ip = ip
         self.udp = udp
-        #TODO: will probably need space for the files too
+        # TODO: will probably need space for the files too
+
 
 class Server:
     def __init__(self):
@@ -26,7 +27,7 @@ class Server:
             "DE-REGISTER": self.deregister_function,
             "PUBLISH": self.publish_function,  # TODO: not implemented yet
             "REMOVE": self.remove_function,  # TODO: not implemented yet
-            "UPDATE-CONTACT": self.update_function
+            "UPDATE-CONTACT": self.update_info_function
         }
 
     # same as client to dynamically assign the ip address
@@ -71,8 +72,43 @@ class Server:
                 response = f"DE-REGISTERED: {client_name}"
                 self.server_socket.sendto(response.encode(), client_address)
             # no else condition is defined since the server doesn't care about a client not existing
-    def update_function(self):
-        print("Hi")
+
+    def update_info_function(self, client_address, parse_message):
+        with self.lock:
+            # FORMAT USED: command = f"UPDATE-CONTACT {self.name} {new_ip} {new_udp}"
+            client_name = parse_message[1]
+            new_ip = parse_message[2]  # we have ensured that new_ip and new_udp are either unchanged or new in client
+            new_udp = parse_message[3]
+
+            # Check if any object in list_registered already has the given IP we added
+            matching_socket = [client for client in self.list_registered if client.udp == new_udp]
+            # Separated for clarity------------------------------------------------------------------------
+            # Check if any object in list_registered already has the given socket we added
+            matching_ip = [client for client in self.list_registered if client.ip == new_ip]
+
+            reason = ''  # this is the reason that will be fed on the output, it will change based on ip and socket
+            # status
+            if matching_ip:
+                reason += "IP value is already in use. "
+            if matching_socket:
+                reason += "Socket is already in use. "
+            if matching_socket or matching_ip:
+                response = f"UPDATE-DENIED RQ {client_name} {reason}"
+                self.server_socket.sendto(response.encode(), client_address)
+            else:
+                # Just a loop to find the client and pass the new info
+                matching_client = [client for client in self.list_registered if client.name == client_name]
+                if not matching_client:
+                    reason = "Name was not found in server"
+                    response = response = f"UPDATE-DENIED RQ {client_name} {reason}"
+                    self.server_socket.sendto(response.encode(), client_address)
+                else:
+                    # Update the client's information
+                    client = matching_client[0]  # extract the client
+                    client.ip_addr = new_ip
+                    client.udp_socket = new_udp
+                    response = f"UPDATE-CONFIRMED RQ {client_name} {new_ip} {new_udp}"
+                    self.server_socket.sendto(response.encode(), client_address)
 
     def publish_function(self):
         print("HI")
